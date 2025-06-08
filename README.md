@@ -1,2 +1,3 @@
-# mywordle
-simple project with wordle in cpp
+# fibonacci heap
+
+implementing this interesting data structure in c++.
