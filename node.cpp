@@ -8,6 +8,7 @@ Node::Node(Node* p, int k){
   parent = p;
   key = k;
   marked = 0;
+  rank = 0;
 };
 Node::Node(){}
 Node::~Node(){}
@@ -16,15 +17,32 @@ void Node::update_key(int n_k){
     key = n_k;
 };
 
-void Node::update_parent(Node* n_p){
+void Node::link_parent(Node* n_p){
   parent = n_p;
 }
-void Node::update_child(Node* n_child, int side){
-  // left = 0, right = 1
-  if (side == 0){ // update left
-    left = n_child;
+void Node::add_child(Node* n_child, int side){
+  // if child pointer is not NULL, go to right of child until it is
+  if (this->child == NULL){
+    // if no prevoius children, just insert this child
+    this->child = n_child;
+    // increase rank, as we added a child
+    rank++;
+    return;
   }
-  if (side == 1){ // update right
-    right = n_child;
+
+  Node* c_ptr = this->child;
+
+  while (c_ptr->next != NULL){
+    // scan right for last child
+    c_ptr = c_ptr->next;
   }
+  // now there is no next
+
+  // append n_child to the end
+  c_ptr->next = n_child;
+  // loop it back to the first one
+  n_child->next = this->child;
+  rank++;
+  return;
+
 }

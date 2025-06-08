@@ -6,7 +6,6 @@ class fibHeap{
     fibHeap();
     ~fibHeap();
     int num_trees;
-    Node* trees[num_trees];
     void insert(int n_val);
     int find_min();
     void extract_min();
@@ -15,4 +14,5 @@ class fibHeap{
       void merge_trees(Node* r_1, Node* r_2);
       void remove_child(Node* node);
       void increase_trees();
+      Node* min_root;
 };
