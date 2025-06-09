@@ -7,7 +7,7 @@
 class Node{
     public:
       Node();
-      Node(Node* p, int k);
+      Node(int k);
       ~Node();
       void update_key(int n_k);
       void link_parent(Node* n_p);

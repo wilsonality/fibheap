@@ -1,4 +1,5 @@
 #include "fibHeap.h"
+#include "node.h"
 
 fibHeap::fibHeap(){
   // initialize num trees
@@ -7,17 +8,26 @@ fibHeap::fibHeap(){
 };
 fibHeap::~fibHeap(){};
 
-void fibHeap::insert(int n_val){
+void fibHeap::insert(int val){
     // node insertion
 
+    /** first, check if it's already there
+	* hashmap.getvalue(val) if not null,
+	* we do not add this to the tree
+	* create a node from parameter
+	**/
 
-  	// create a node from parameter
-  	Node *new_node = new Node(n_val);
-    // then we
+  	Node* new_node = new Node(val);
+
+    // consolidate trees
 };
 
 
-int fibHeap::find_min(){};
+int fibHeap::find_min(){
+  // subprogram for when we extract min
+
+  return -1;
+};
 
 
 void fibHeap::extract_min(){
@@ -31,7 +41,12 @@ void fibHeap::decrease_key(Node* node){
 
 
 // private methods
-void fibHeap::merge_trees(Node* r_1, Node* r_2){};
+void fibHeap::merge_trees(Node* r_1, Node* r_2){
+  // subroutine of extract_min
+  // r_1 and r_2 are nodes in root list
+
+  // we must find the smaller root and add it as a child
+};
 
 
 void fibHeap::remove_child(Node* node){};

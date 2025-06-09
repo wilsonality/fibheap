@@ -4,8 +4,7 @@
 
 #include "node.h"
 
-Node::Node(Node* p, int k){
-  parent = p;
+Node::Node(int k){
   key = k;
   marked = 0;
   rank = 0;
