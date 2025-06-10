@@ -1,5 +1,6 @@
-// header for fibonacci heap
 #include "node.h"
+#include <unordered_map>
+
 
 class fibHeap{
   public:
@@ -12,7 +13,8 @@ class fibHeap{
     void decrease_key(Node* node);
     private:
       void merge_trees(Node* r_1, Node* r_2);
-      void remove_child(Node* node);
+      void orphan(Node* node);
       void increase_trees();
       Node* min_root;
+      std::unordered_map<int, Node*> hashmap;
 };
