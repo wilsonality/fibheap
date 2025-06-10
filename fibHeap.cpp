@@ -5,8 +5,11 @@ fibHeap::fibHeap(){
   // initialize num trees
   // default is max 20
   this->num_trees = 20;
+  Node* min_root = NULL;
 };
-fibHeap::~fibHeap(){};
+fibHeap::~fibHeap(){
+  // destructs object
+};
 
 void fibHeap::insert(int val){
     // node insertion
@@ -18,8 +21,15 @@ void fibHeap::insert(int val){
 	**/
 
   	Node* new_node = new Node(val);
+    // check if heap is empty
+    if (min_root == NULL){
+      min_root = new_node;
+      return;
+    }
 
-    // consolidate trees
+    // we add it to root linked list
+
+    if (min_root->prev == NULL){}
 };
 
 
@@ -49,7 +59,24 @@ void fibHeap::merge_trees(Node* r_1, Node* r_2){
 };
 
 
-void fibHeap::remove_child(Node* node){};
+void fibHeap::remove_child(Node* node){
+  /** this function disconnects node from neighbors
+  *   and from its parent
+  *   after function returns, it's disconnected from heap
+  */
+  if (node->prev != 0){
+    // if we have a child before this
+    node->prev->next = node->next;
+    }
+  if (node->next != 0){
+    // if we have a child after this
+    node->next->prev = node->prev;
+  }
+  if (node->parent != 0){
+    node->parent->child = 0;
+  }
+  return;
+};
 
 
 void fibHeap::increase_trees(){

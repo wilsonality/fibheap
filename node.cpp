@@ -20,6 +20,9 @@ void Node::link_parent(Node* n_p){
   parent = n_p;
 }
 void Node::add_child(Node* n_child, int side){
+  /** this function updates child pointer
+   *  and increases rank
+   */
   // if child pointer is not NULL, go to right of child until it is
   if (this->child == NULL){
     // if no prevoius children, just insert this child
@@ -35,9 +38,8 @@ void Node::add_child(Node* n_child, int side){
     // scan right for last child
     c_ptr = c_ptr->next;
   }
-  // now there is no next
 
-  // append n_child to the end
+  // append n_child to the last child
   c_ptr->next = n_child;
   // loop it back to the first one
   n_child->next = this->child;
