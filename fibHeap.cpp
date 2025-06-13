@@ -130,15 +130,28 @@ void fibHeap::merge_trees(Node* r_1, Node* r_2){
     Node* smaller = r_2;
     Node* larger = r_1;
   }
+  /** we use a switch case for the logic of adopting larger,
+	* depending on smaller's rank **/
 
-  if (smaller->child == NULL){
-      // if smaller has no children, add bigger and rank++
-	  // incorporate r_2 as a child of r_1
-      smaller->child = r_2;
-      smaller->rank++;
-      return;
+    switch(smaller->rank){
+      case 0:
+        smaller->child = larger;
+        smaller->rank++;
+        break;
+      case 1:
+        smaller->child->prev = larger;
+    	larger->prev = smaller->child;
+    	smaller->rank++;
+        break;
+      default:
+        // connect larger to the last child
+        smaller->child->prev->next = larger;
+        // connect larger to the first child
+        smaller->child->prev = larger;
     }
-};
+    return;
+  }
+}
 
 
 void fibHeap::orphan(Node* node){
@@ -156,8 +169,10 @@ void fibHeap::orphan(Node* node){
     node->next->prev = node->prev;
   }
 	// disconnect from parent and make parent point to next child
+    // also decrement rank
 
     node->parent->child = node->next;
+    node->parent->rank--;
 
     // and mark parent
     if (node->parent->marked == 1){
