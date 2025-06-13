@@ -10,7 +10,7 @@ class fibHeap{
     void insert(int val);
     int find_min();
     void extract_min();
-    void decrease_key(Node* node);
+    void decrease_key(Node* node, int new_val);
     private:
       void merge_trees(Node* r_1, Node* r_2);
       void orphan(Node* node);

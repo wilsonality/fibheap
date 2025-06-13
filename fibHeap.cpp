@@ -96,14 +96,23 @@ void fibHeap::extract_min(){
   delete min_root;
 
 
-  // after we cut off the old root, we need to merge trees
+  /** after we cut off the old root, we need to merge trees
+	* so we scan for trees of the same rank
+	* then we use the merge function on them
+	*/
 
 };
 
 
-void fibHeap::decrease_key(Node* node){
-  // remember to preserve heap properties
+void fibHeap::decrease_key(Node* node, int new_val){
+
+  /** if we create a duplicate key, erase node
+ 	* else check heap properties,
+	* if they are violated, we need to orphan our children
+	*/
   printf("running decrease_key on node: %d\n", node->key);
+
+
   return;
 };
 
@@ -125,7 +134,7 @@ void fibHeap::merge_trees(Node* r_1, Node* r_2){
     Node* smaller = r_1;
     Node* larger = r_2;
 
-  } else{
+  } else {
     // if r_2 smaller (they are never equal)
     Node* smaller = r_2;
     Node* larger = r_1;
@@ -136,12 +145,10 @@ void fibHeap::merge_trees(Node* r_1, Node* r_2){
     switch(smaller->rank){
       case 0:
         smaller->child = larger;
-        smaller->rank++;
         break;
       case 1:
         smaller->child->prev = larger;
     	larger->prev = smaller->child;
-    	smaller->rank++;
         break;
       default:
         // connect larger to the last child
@@ -149,6 +156,7 @@ void fibHeap::merge_trees(Node* r_1, Node* r_2){
         // connect larger to the first child
         smaller->child->prev = larger;
     }
+    smaller->rank++;
     return;
   }
 }
@@ -158,7 +166,7 @@ void fibHeap::orphan(Node* node){
   /** this function disconnects node from parent
   *   and from its siblings
   *   after function returns, it's disconnected from heap
-  *   then it is added to root list
+  *   then it is added to root list, unmarking it
   */
   if (node->prev != 0){
     // if we have a child before this
@@ -174,7 +182,8 @@ void fibHeap::orphan(Node* node){
     node->parent->child = node->next;
     node->parent->rank--;
 
-    // and mark parent
+    // unmark node and mark parent
+    node->marked = 0;
     if (node->parent->marked == 1){
       // if parent already marked, remove it from grandparent
       orphan(node->parent->parent);
@@ -190,13 +199,16 @@ void fibHeap::orphan(Node* node){
       return;
     }
     // otherwise, if there are multiple roots already
-    Node* last_root = min_root->prev;
-
     // insert node into the circular linked list of roots
     min_root->prev = node;
-    last_root->next = node;
-    node->prev = last_root;
+    min_root->prev->next = node;
+    node->prev = min_root->prev;
     node->next = min_root;
+
+    // check if it's smaller than current min
+    if (min_root->key > node->key){
+      min_root = node;
+    }
   return;
 };
 
