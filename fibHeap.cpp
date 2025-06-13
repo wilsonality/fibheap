@@ -23,6 +23,11 @@ void fibHeap::insert(int val){
 	* create a node from parameter
 	**/
 
+    if (hashmap.at(val) != NULL){
+      // if we already have a node for this value, return
+      return;
+    }
+
   	Node* new_node = new Node(val);
     // check if heap is empty, if so make it a first root
     if (min_root == NULL){
@@ -60,7 +65,38 @@ int fibHeap::find_min(){
 
 
 void fibHeap::extract_min(){
-  // separate children then delete the node
+  // orphan children then delete the node
+  // then we find the new min_root
+
+
+  while (min_root->child != NULL){
+    // while min root has a child, orphan it
+    // this adds it to the root list
+    orphan(min_root->child);
+
+  }
+
+  Node* second_root = min_root->next;
+  Node* last_root = min_root->prev;
+
+  // we need to link them, if they are different
+  if (second_root != last_root){
+    second_root->prev = last_root;
+    last_root->next = second_root;
+  }
+  if (second_root == last_root){
+    second_root->prev = NULL;
+    second_root->next = NULL;
+  }
+
+  // now we can disconnect min_root and remove from map
+
+  hashmap.erase(min_root->key);
+  delete min_root;
+
+
+  // after we cut off the old root
+
 };
 
 
@@ -82,7 +118,7 @@ void fibHeap::orphan(Node* node){
   /** this function disconnects node from parent
   *   and from its siblings
   *   after function returns, it's disconnected from heap
-  *   then it can be added to rootlist
+  *   then it is added to root list
   */
   if (node->prev != 0){
     // if we have a child before this
@@ -92,14 +128,33 @@ void fibHeap::orphan(Node* node){
     // if we have a child after this
     node->next->prev = node->prev;
   }
-	// disconnect from parent, and mark parent
-    node->parent->child = 0;
+	// disconnect from parent and make parent point to next child
+
+    node->parent->child = node->next;
+
+    // and mark parent
     if (node->parent->marked == 1){
       // if parent already marked, remove it from grandparent
       orphan(node->parent->parent);
     }
 
     // add to root list
+    if (min_root->prev == NULl){
+      // if there was only one root
+      min_root->next = node;
+      min_root->prev = node;
+      node->prev = min_root;
+      node->next = min_root;
+      return;
+    }
+    // otherwise, if there are multiple roots already
+    Node* last_root = min_root->prev;
+
+    // insert node into the circular linked list of roots
+    min_root->prev = node;
+    last_root->next = node;
+    node->prev = last_root;
+    node->next = min_root;
   return;
 };
 
@@ -108,5 +163,3 @@ void fibHeap::increase_trees(){
   // should we run out of space for trees
   // we copy node ptrs into an array double the size
 };
-
-
