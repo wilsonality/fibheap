@@ -1,6 +1,7 @@
 #include "fibHeap.h"
 #include "node.h"
 #include <unordered_map>
+#include <stdio.h>
 
 fibHeap::fibHeap(){
   // initialize num trees
@@ -95,22 +96,48 @@ void fibHeap::extract_min(){
   delete min_root;
 
 
-  // after we cut off the old root
+  // after we cut off the old root, we need to merge trees
 
 };
 
 
 void fibHeap::decrease_key(Node* node){
   // remember to preserve heap properties
+  printf("running decrease_key on node: %d\n", node->key);
+  return;
 };
 
 
 // private methods
 void fibHeap::merge_trees(Node* r_1, Node* r_2){
-  // subroutine of extract_min
-  // r_1 and r_2 are nodes in root list
+  /** subroutine of extract min
+  * r_1 and r_2 are nodes in root list with same rank
+  * we must consolidate these trees, then check again
+  * for more trees of the same rank
+  */
 
   // we must find the smaller root and add it as a child
+  Node* smaller = null;
+  Node* larger = null;
+
+  if (r_1->key < r_2->key){
+    // if r_1 smaller
+    Node* smaller = r_1;
+    Node* larger = r_2;
+
+  } else{
+    // if r_2 smaller (they are never equal)
+    Node* smaller = r_2;
+    Node* larger = r_1;
+  }
+
+  if (smaller->child == NULL){
+      // if smaller has no children, add bigger and rank++
+	  // incorporate r_2 as a child of r_1
+      smaller->child = r_2;
+      smaller->rank++;
+      return;
+    }
 };
 
 
