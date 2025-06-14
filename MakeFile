@@ -1,0 +1,17 @@
+all: my_program
+
+
+my_program: main.o fibheap.o node.o
+	g++ $(CFLAGS) -o my_program $^
+
+main.o: main.cpp
+	g++ $(CFLAGS) -c $^
+
+fibheap.o: fibHeap.cpp
+	g++ $(CFLAGS) -c $^
+
+%.o: %.cpp
+	g++ $(CFLAGS) -c $^
+
+clean:
+	rm -f *.o my_program

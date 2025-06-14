@@ -9,12 +9,9 @@ class Node{
       Node();
       Node(int k);
       ~Node();
-      void update_key(int n_k);
-      void link_parent(Node* n_p);
-      void add_child(Node* n_child, int side);
-      int get_key();
+    int get_key();
     private:
-      friend class fibHeap;
+      friend class fibheap;
       Node* parent;
       Node* child;
       Node* prev;

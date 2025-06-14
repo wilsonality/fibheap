@@ -1,6 +1,7 @@
-//
-// Created by wils on 4/4/25.
-//
+/** node class implementation
+* operations are handled by fibheap,
+* so no functions are implementated in the node class
+ */
 
 #include "node.h"
 
@@ -10,40 +11,9 @@ Node::Node(int k){
   rank = 0;
 };
 Node::Node(){}
+
 Node::~Node(){}
 
-void Node::update_key(int n_k){
-    key = n_k;
-};
-
-void Node::link_parent(Node* n_p){
-  parent = n_p;
-}
-void Node::add_child(Node* n_child, int side){
-  /** this function updates child pointer
-   *  and increases rank
-   */
-  // if child pointer is not NULL, go to right of child until it is
-  if (this->child == NULL){
-    // if no prevoius children, just insert this child
-    this->child = n_child;
-    // increase rank, as we added a child
-    rank++;
-    return;
-  }
-
-  Node* c_ptr = this->child;
-
-  while (c_ptr->next != NULL){
-    // scan right for last child
-    c_ptr = c_ptr->next;
-  }
-
-  // append n_child to the last child
-  c_ptr->next = n_child;
-  // loop it back to the first one
-  n_child->next = this->child;
-  rank++;
-  return;
-
+int Node:: get_key(){
+  return key;
 }
