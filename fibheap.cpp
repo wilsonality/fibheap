@@ -22,7 +22,6 @@ void fibheap::insert(int val){
 	* if it's not already in the heap, then we
 	* create a node from parameter
 	**/
-
     if (hashmap.find(val) == hashmap.end()){
       // if we already have a node for this value, return
       return;
@@ -53,6 +52,7 @@ void fibheap::insert(int val){
       // if old min is more than new node
       min_root = new_node;
     }
+    return;
 };
 
 
@@ -112,6 +112,7 @@ void fibheap::decrease_key(Node* node, int new_val){
   printf("running decrease_key on node: %d to %d\n", node->key, new_val);
 
   // check if new_val already exists in heap
+  try {
   if (hashmap.find(new_val) == hashmap.end()){
     // we need to delete the node
     while (node->child != 0){
@@ -126,23 +127,22 @@ void fibheap::decrease_key(Node* node, int new_val){
     delete node;
     return;
   }
+  } catch (...){
+    // since new_val is not already in heap
+    // change node->key
+    // check if heap properties violated
+    node->key = new_val;
 
-  // since new_val is not already in heap
-  // change node->key
-  // check if heap properties violated
-  node->key = new_val;
-
-  /** compare to parent, if not less, do nothing
-   *  if less, then we cut off at node
-   *   possibly recursive if parent is marked
-   */
-  if (node->key < node->parent->key){
-    // heap violated, parent larger than node
-    // orphan function handles the recursion
-
-    orphan(node);
+    /** compare to parent, if not less, do nothing
+     *  if less, then we cut off at node
+     *   possibly recursive if parent is marked
+     */
+    if (node->key < node->parent->key){
+      // heap violated, parent larger than node
+      // orphan function handles the recursion
+      orphan(node);
+    }
   }
-
 
   return;
 };
