@@ -104,21 +104,50 @@ void fibheap::extract_min(){
 
 
 void fibheap::decrease_key(Node* node, int new_val){
-
+// get rid of duplicate try block
   /** if we create a duplicate key, erase node
  	* else check heap properties,
 	* if they are violated, we need to orphan our children
 	*/
-  printf("running decrease_key on node: %d to %d\n", node->key, new_val);
 
-  // check if new_val already exists in heap
+  try {
+    // if new_val already exists, we erase this node
+    Node* node_2 = hashmap.at(new_val);
+    // if we are able to get here, new_val is already here
+  // now we must erase this node: disconnect from parents, then orphan all children
+    while (node->child != 0){
+      orphan(node->child);
+    }
+    // now node has no children
+    // we can disconnect from parent and delete from map
+    node->parent->child = 0;
+    hashmap.erase(node->key);
+    delete node;
+    return;
+  }
+  catch(const std::out_of_range& e){
+    // if new_val is not in hashmap
+    // change node->key
+    // check if heap properties violated
+    node->key = new_val;
+
+    /** compare to parent, if not less, do nothing
+     *  if less, then we cut off at node
+     *   possibly recursive if parent is marked
+     */
+    if (node->key < node->parent->key){
+      // heap violated, parent larger than node
+      // orphan function handles the recursion
+      orphan(node);
+    }
+  }
+
   try {
   if (hashmap.find(new_val) == hashmap.end()){
     // we need to delete the node
     while (node->child != 0){
       orphan(node->child);
-      // keep node unmarked so we can just cut off nodes
-      node->marked = 0;
+      // we can just cut off nodes
     }
     // now node has no children
     // we can disconnect from parent and delete from map
@@ -193,11 +222,15 @@ void fibheap::merge_trees(Node* r_1, Node* r_2){
 
 
 void fibheap::orphan(Node* node){
-  /** this function disconnects node from parent
+  /** this function unmarks node
+  *   disconnects node from parent
   *   and from its siblings
   *   after function returns, it's disconnected from heap
-  *   then it is added to root list, unmarking it
+  *   then it is added to root list
+  *   sometimes we call this on nodes that have no parents
   */
+  // unmark it node
+  node->marked = 0;
   if (node->prev != 0){
     // if we have a child before this
     node->prev->next = node->next;
@@ -207,17 +240,18 @@ void fibheap::orphan(Node* node){
     node->next->prev = node->prev;
   }
 	// disconnect from parent and make parent point to next child
-    // also decrement rank
-
-    node->parent->child = node->next;
-    node->parent->rank--;
-
-    // unmark node and mark parent
-    node->marked = 0;
-    if (node->parent->marked == 1){
-      // if parent already marked, remove it from grandparent
-      orphan(node->parent->parent);
+    // also decrement parent rank
+    if (node->parent != 0){
+      node->parent->child = node->next;
+      node->parent->rank--;
+      // mark parent
+      if (node->parent->marked == 1){
+        // if parent already marked, remove it from grandparent
+        orphan(node->parent->parent);
+      }
     }
+
+
     // add to root list
     if (min_root->prev == 0){
       // if there was only one root
